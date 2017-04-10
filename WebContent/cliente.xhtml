@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+
+<ui:composition template="_template.xhtml">
+	<ui:define name="title">Cadastro De Clientes</ui:define>
+	<ui:define name="conteudo">
+		<p:fieldset legend="Dados do Cliente">
+		
+			<h:form id="formCadatro" styleClass="formCadatro">
+				<h:inputHidden value="#{clientesBean.cliente.id}" />
+				<p:panelGrid columns="2">
+
+					<p:outputLabel for="nome" value="Nome : " />
+					<p:inputText id="nome" value="#{clientesBean.cliente.nome}" />
+
+					<p:outputLabel for="endereco" value="Endereço : " />
+					<p:inputText id="endereco" value="#{clientesBean.cliente.endereco}" styleClass="inputLarge" />
+
+					<p:outputLabel for="email" value="E-Mail : " />
+					<p:inputText id="email" styleClass="inputLarge" />
+
+					<p:outputLabel for="telefone" value="Telefones : " />
+					<p:inputMask id="telefone" value="#{clientesBean.telefone.numero}"
+						mask="(99) 99999-9999" style="float : left">
+						<p:selectOneMenu id="tipo"
+							value="#{clientesBean.telefone.tipoDeContato}"
+							style="width:125px">
+							<f:selectItem itemLabel="Residêncial" itemValue="Residêncial" />
+							<f:selectItem itemLabel="Comercial" itemValue="Comercial" />
+							<f:selectItem itemLabel="Celular" itemValue="Celular" />
+						</p:selectOneMenu>
+
+						<p:commandButton icon="fa fa-fw fa-phone" title="Telefones" style="float: right;"
+							action="#{clientesBean.adicionaTelefoneAoCliente}" process="telefone @this" update="tabelaTelefonesDoCliente">
+						</p:commandButton>
+					</p:inputMask>
+
+
+					<p:commandButton value="Gravar" action="#{clientesBean.adicionar}" styleClass="btnGravar"
+						update="formListaClientes" />
+						
+					
+				</p:panelGrid>	
+			</h:form>
+			
+				<p:panelGrid columns="2">
+					<p:dataList id="tabelaTelefonesDoCliente" value="#{clientesBean.telefonesDoCliente}" var="telefone" type="definition">
+						<f:facet name="header">Telefones</f:facet>
+						
+						<p:commandButton icon="fa fa-fw fa-remove" style="margin-left:10px"
+						action="#{clientesBean.removeTelefoneDoCliente(telefone)}" process="@this"
+						update="tabelaTelefonesDoCliente" />
+						
+						   #{telefone.numero} - #{telefone.tipoDeContato}
+					</p:dataList>
+				</p:panelGrid>
+					
+
+		</p:fieldset>
+		
+		<p:fieldset legend="Clientes Cadastrados">
+
+		<h:form id="formListaClientes">			
+
+				<p:dataTable bgcolor="#99CCFF" value="#{clientesBean.listaTodos}"
+					widgetVar="tabelaclientes" style="float: right"
+					var="cliente" id="tabelaclientes" paginator="true" rows="7">
+
+					<p:column headerText="Nome" sortBy="#{cliente.nome}">
+						<h:outputText value="#{cliente.nome}" />
+					</p:column>
+
+					<p:column headerText="Endereço" sortBy="#{cliente.endereco}">
+						<h:outputText value="#{cliente.endereco}" />
+					</p:column>
+
+					 <p:column headerText="Telefones" style="width : 60px;">
+
+						<p:commandButton icon="fa fa-fw fa-phone" title="Telefones"
+							oncomplete="PF('telDialog#{cliente.id}').show();" update="listaDeTelefones"
+							action="#{clientesBean.listaTelefonesDoCliente(cliente)}">
+							
+						</p:commandButton>
+							
+							<p:dialog header="Telefones do Cliente" widgetVar="telDialog#{cliente.id}"
+								height="150" width="360">
+
+								<p:dataList id="listaDeTelefones" value="#{clientesBean.cliente.telefones}" var="tel">
+									#{tel.numero} - #{tel.tipoDeContato}
+							    </p:dataList>
+
+							</p:dialog>			
+
+					</p:column> 
+					
+					<p:column headerText="Opções" style="width: 100px;">
+						<p:commandButton icon="fa fa-fw fa-remove"
+							style="margin-left:10px" action="#{clientesBean.remover(cliente)}"
+							process="@this" update="formListaClientes"/>
+					
+					<p:commandButton icon="fa fa-fw fa-edit" update="formCadatro tabelaTelefonesDoCliente"
+					                action="#{clientesBean.carregaCliente(cliente)}"/>						
+					</p:column>
+
+				</p:dataTable>			
+
+			<p:commandButton value="Relatório" action="#{clientesBean.gerarRelatorio()}" styleClass="btnGravar"
+						ajax="false" />
+		</h:form>
+		</p:fieldset>
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

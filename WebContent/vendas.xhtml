@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+
+<ui:composition template="_template.xhtml">
+	<ui:define name="title">Venda De Produtos</ui:define>
+	<ui:define name="conteudo">
+
+		<p:fieldset legend="Venda De Produtos">
+
+			<h:form id="formVenda">
+				<h:inputHidden />
+				<p:panelGrid columns="4">
+
+					<p:outputLabel for="nome" value="Nome do Cliente: " />
+					<p:autoComplete id="nome" value="#{vendasBean.idCliente}"
+						completeMethod="#{clientesBean.listaPorNome}" minQueryLength="3"
+						var="cliente" itemLabel="#{cliente.nome}"
+						itemValue="#{cliente.id}" effect="fade" />
+
+					<p:outputLabel for="data" value="Data da Venda : " />
+
+					<p:calendar id="data" class="dataVenda"
+						value="#{vendasBean.venda.data.time}" mask="true" pattern="dd/MM/yyyy"/>
+					
+				</p:panelGrid>
+				<p:panelGrid columns="4">
+
+					<p:outputLabel for="pagamento" value="Forma de Pagamento :" />
+					<p:selectOneMenu id="pagamento" style="width:125px"
+						value="#{vendasBean.venda.formaDePagamento}">
+						<f:selectItem itemLabel="Á Vista" itemValue="A Vista" />
+						<f:selectItem itemLabel="Cartão" itemValue="Cartao" />
+						<f:selectItem itemLabel="Tranferência" itemValue="Transferecia" />
+						<f:selectItem itemLabel="Fiado" itemValue="Fiado" />
+					</p:selectOneMenu>
+
+					<p:commandButton value="Gravar Venda" styleClass="btnGravar"
+						update="@form" action="#{vendasBean.gravaVenda}" />
+
+				</p:panelGrid>
+			</h:form>
+
+			<h:form id="formAddProduto">
+				<p:panelGrid columns="5">
+
+					<p:outputLabel for="produto" value="Produto : " />
+					<p:autoComplete id="produto" value="#{vendasBean.idProduto}"
+						completeMethod="#{produtosBean.listaPorNome}" minQueryLength="3"
+						var="produto" itemLabel="#{produto.nome}"
+						itemValue="#{produto.id}" effect="fade" />
+
+					<p:outputLabel for="qtde" value="Quantidade :" />
+					<p:inputMask id="qtde" styleClass="qtde"
+						value="#{vendasBean.item.quantidade}">
+						<f:validateLongRange minimum="1" maximum="1000" />
+					</p:inputMask>
+
+					<p:commandButton value="Adicionar Produto" styleClass="btnGravar"
+						update="formAddProduto formItens"
+						action="#{vendasBean.adicionaItem}" />
+				</p:panelGrid>
+			</h:form>
+		</p:fieldset>
+
+		<p:fieldset legend="Itens Da Venda">
+
+			<h:form id="formItens">
+
+				<p:dataTable bgcolor="#99CCFF" value="#{vendasBean.venda.itens}"
+					widgetVar="tabelaProdutos" style="float: right" var="item"
+					id="tabelaDosIntens" paginator="true" rows="7">
+
+					<p:column headerText="Produto">
+						<h:outputText value="#{item.produto.nome}" />
+					</p:column>
+
+					<p:column headerText="Descrição">
+						<h:outputText value="#{item.produto.descricao}" />
+					</p:column>
+
+					<p:column headerText="Qtde">
+						<h:outputText value="#{item.quantidade}" />
+					</p:column>
+
+					<p:column headerText="Preço" style="width : 60px;">
+						<h:outputText value="#{item.valorUnitario}">
+							<f:convertNumber type="currency" pattern="R$ #0.00"
+								currencySymbol="R$" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Valor Total" style="width : 60px;">
+						<h:outputText value="#{item.valorTotal}">
+							<f:convertNumber type="currency" pattern="R$ #0.00"
+								currencySymbol="R$" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Opções" style="width: 100px;">
+						<p:commandButton icon="fa fa-fw fa-remove"
+							style="margin-left:10px" action="#{vendasBean.removeItem(item)}"
+							process="@this" update="formItens" />
+					</p:column>
+
+				</p:dataTable>
+
+				<p:panelGrid columns="5">
+						 
+
+					<p:outputLabel for="total" value="Valor Total: " />
+					<h:outputText id="total" value="#{vendasBean.somaTotal}">
+						<f:convertNumber type="currency" pattern="R$ #0.00"
+							currencySymbol="R$" locale="pt_BR" />
+					</h:outputText>
+				</p:panelGrid>
+			</h:form>
+			
+		</p:fieldset>
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

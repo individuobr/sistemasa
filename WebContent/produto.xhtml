@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+
+<ui:composition template="_template.xhtml">
+	<ui:define name="title">Cadastro De Produtos</ui:define>
+	<ui:define name="conteudo">
+		<p:fieldset legend="Dados do Produto">
+		
+			<h:form id="formCadatro" styleClass="formCadatro">
+				<h:inputHidden value="#{produtosBean.produto.id}" />
+				<p:panelGrid columns="2">
+
+					<p:outputLabel for="nome" value="Nome : " styleClass="inputLarge"/>
+					<p:inputText id="nome" value="#{produtosBean.produto.nome}" />
+				
+					<p:outputLabel for="descricao" value="Descrição : " />
+					<p:inputTextarea id="descricao" value="#{produtosBean.produto.descricao}" styleClass="inputLarge" rows="4" />
+
+					<p:outputLabel for="valorAtacado" value="Valor de Atacado : " />		
+					<p:inputNumber id="valorAtacado" value="#{produtosBean.produto.valorAtacado}" 
+									decimalSeparator="," thousandSeparator="." symbol="R$ ">
+									<f:validateDoubleRange minimum="1.00" maximum="1000.00" />	
+					</p:inputNumber>	
+					
+					<p:outputLabel for="valorVarejo" value="Valor de Varejo : " />		
+					<p:inputNumber id="valorVarejo" value="#{produtosBean.produto.valorVarejo}" 
+									decimalSeparator="," thousandSeparator="." symbol="R$ ">
+									<f:validateDoubleRange minimum="1.00" maximum="1000.00" />	
+					</p:inputNumber>
+					
+					<p:outputLabel for="qtdeMinAcatado" value="Qtde. Min. de Atacado :"/>
+					<p:inputMask id="qtdeMinAcatado" value="#{produtosBean.produto.qtdeMinAtacado}"
+					styleClass="qtde"/>
+					
+					<p:commandButton value="Gravar"  styleClass="btnGravar"
+						update="formLista" action="#{produtosBean.adiciona}"/>
+				</p:panelGrid>	
+			</h:form>
+			
+				
+					
+
+		</p:fieldset>
+		
+		<p:fieldset legend="Produtos Cadastrados">
+
+		<h:form id="formLista">			
+
+				<p:dataTable bgcolor="#99CCFF" value="#{produtosBean.listarProdutos}"
+					widgetVar="tabelaProdutos" style="float: right"
+					var="produto" id="tabelaProdutos" paginator="true" rows="7">
+
+					<p:column headerText="Nome" >
+						<h:outputText value="#{produto.nome}" />
+					</p:column>
+
+					<p:column headerText="Descrição">
+						<h:outputText value="#{produto.descricao}" />
+					</p:column>
+
+					 <p:column headerText="Valor Atacado" style="width : 60px;">
+						<h:outputText value="#{produto.valorAtacado}" >
+						<f:convertNumber type="currency" pattern="R$ #0.00"
+								currencySymbol="R$" locale="pt_BR" />										
+						</h:outputText>						
+					 </p:column>
+					 
+					 <p:column headerText="Valor Varejo" style="width : 60px;">
+						<h:outputText value="#{produto.valorVarejo}" >
+						<f:convertNumber type="currency" pattern="R$ #0.00"
+								currencySymbol="R$" locale="pt_BR" />										
+						</h:outputText>						
+					 </p:column>
+					 
+					 <p:column headerText="Qtde Min. Acatado">
+						<h:outputText value="#{produto.qtdeMinAtacado}" />
+					</p:column>
+					 
+					<p:column headerText="Opções" style="width: 100px;">
+						<p:commandButton icon="fa fa-fw fa-remove"
+							style="margin-left:10px" action="#{produtosBean.remover(produto)}"
+							process="@this" update="formLista"/>
+					
+					<p:commandButton icon="fa fa-fw fa-edit" update="formCadatro"
+					      action="#{produtosBean.alterar(produto)}"          />						
+					</p:column>
+
+				</p:dataTable>			
+
+		</h:form>
+		</p:fieldset>
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

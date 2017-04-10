@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+<h:outputStylesheet library="css" name="style.css" /> 
+<h:outputScript library="js" name="locale-primefaces.js"/>
+<title><ui:insert name="title"/></title>
+</h:head>
+	<h:body>
+		<div id="cabecalho">			
+				<h:graphicImage library="imagens" name="logo.png" /> 
+
+				<!-- <h:form rendered="#{usuarioLogado != null}" style="position:absolute; right: 10px;">
+					
+				</h:form> -->
+			
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+						
+			<h:form>
+				<p:tabMenu activeIndex="#{param.i}">
+					<p:menuitem value="Clientes" outcome="cliente?faces-redirect=true" icon="fa fa-fw fa-users">
+						<f:param name="i" value="0" />
+					</p:menuitem>
+					<p:menuitem value="Produtos" outcome="produto?faces-redirect=true" icon="fa fa-fw fa-cubes">
+						<f:param name="i" value="1" />						
+					</p:menuitem>
+					<p:menuitem value="Nova Venda" outcome="vendas?faces-redirect=true" icon="fa fa-fw fa-shopping-cart">
+						<f:param name="i" value="2" />
+					</p:menuitem>
+					<p:menuitem value="Vendas Efetivadas" outcome="vendasefetivadas?faces-redirect=true" icon="fa fa-fw fa-search">
+						<f:param name="i" value="3" />							
+					</p:menuitem>
+					<p:menuitem value="Configurações" outcome="configuraçoes?faces-redirect=true" icon="fa fa-fw fa-gear">
+						<f:param name="i" value="4" />							
+					</p:menuitem>
+					<p:menuitem value="LogoOut" action="#{loginBean.deslogar}"
+						icon="fa fa-fw fa-sign-out">
+						<f:param name="i" value="5" />
+					</p:menuitem>
+				</p:tabMenu>
+			</h:form> 
+
+
+
+			<!-- <p:separator id="customSeparator" style="width:100%;height:1px" />
+			 <p:spacer width="1" height="22" style="position: relative; bottom: -5px;background-color: #A8A8A8; margin-left: 10px;margin-right: 10px" />
+			 <p align="right">#{sessionScope['usuarioLogado'].email}</p>
+			 -->
+
+			<h1>
+				<ui:insert name="titulo" />
+			</h1>
+
+		</div>
+
+		<div id="conteudo">
+			<ui:insert name="conteudo" />
+		</div>
+
+		<div id="rodape" class="ui-widget-header">
+			<h3>
+				Created By Sergio Costa
+			</h3>
+			<p align="right" style="margin-right: 20px">Copyright 2016</p>
+		</div> 
+		
+	</h:body>
+
+</html>
